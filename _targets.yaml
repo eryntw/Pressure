@@ -1,38 +1,38 @@
 setup:
-  script: ../Status/010_setup.R
-  store: ../../out/Status/aus_imcra_prov_dissolve______0__P50Y__sa_br_dissolve/90__90__P1Y__species/setup
+  script: ../Pressure/010_setup.R
+  store: ../../out/Pressure/aus_imcra_prov_dissolve______0__P50Y__sa_br_dissolve/30__30__P1Y__species--subspecies/setup
 iucn:
-  script: ../Status/020_iucn.R
-  store: ../../out/Status/aus_imcra_prov_dissolve______0__P50Y__sa_br_dissolve/90__90__P1Y__species/iucn
+  script: ../Pressure/020_iucn.R
+  store: ../../out/Pressure/aus_imcra_prov_dissolve______0__P50Y__sa_br_dissolve/30__30__P1Y__species--subspecies/iucn
 sdmstats:
-  script: ../Status/030_sdmstats.R
-  store: ../../out/Status/aus_imcra_prov_dissolve______0__P50Y__sa_br_dissolve/90__90__P1Y__species/sdmstats
+  script: ../Pressure/030_sdmstats.R
+  store: ../../out/Pressure/aus_imcra_prov_dissolve______0__P50Y__sa_br_dissolve/30__30__P1Y__species--subspecies/sdmstats
 regcont:
-  script: ../Status/040_regcont.R
-  store: ../../out/Status/aus_imcra_prov_dissolve______0__P50Y__sa_br_dissolve/90__90__P1Y__species/regcont
+  script: ../Pressure/040_regcont.R
+  store: ../../out/Pressure/aus_imcra_prov_dissolve______0__P50Y__sa_br_dissolve/30__30__P1Y__species--subspecies/regcont
 envCleaned:
   clean:
     script: ../envCleaned/010_clean.R
-    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species/clean
+    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species--subspecies/clean
   outliers:
     script: ../envCleaned/020_outliers.R
-    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species/outliers
+    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species--subspecies/outliers
   populations:
     script: ../envCleaned/030_populations.R
-    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species/populations
+    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species--subspecies/populations
   report_prep:
     script: ../envCleaned/040_report_prep.R
-    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species/report_prep
+    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species--subspecies/report_prep
   report:
     script: ../envCleaned/050_report.R
-    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species/report
+    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species--subspecies/report
   release:
     script: ../envCleaned/060_release.R
-    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species/release
+    store: ../../out/envCleaned/aus_imcra_prov_dissolve______0__P100Y__sa_br_dissolve/30__30__P1Y__species--subspecies/release
 RecExtract:
   RecExtr:
     script: ../RecExtract/010_RecExtr.R
-    store: ../../out/RecExtract/_targets/RecExtr
+    store: ../../out/RecExtract/aus_imcra_prov_dissolve______0__P50Y__sa_br_dissolve/30__30__P1Y__subspecies/RecExtr
 envSDMs:
   setup:
     script: ../envSDMs/010_setup.R

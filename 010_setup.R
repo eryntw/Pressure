@@ -49,9 +49,17 @@ tar_plan(
     )
   ),
   
+  # kingdom_lookup
+  tarchetypes::tar_file_read(
+    kingdom_lookup,
+    fs::path(tars$RecExtract$RecExtr$store, "objects", "kingdom_lookup"),
+    readRDS(!!.x)
+  ),
+  
   tar_target(
     thresh_meta_classified,
-    classify_species(thresh_meta, search_term_col = "search_term")
+    classify_species(thresh_meta, kingdom_lookup,
+                     search_term_col = "search_term")
   ),
   
   #### GHM 2022 ----
@@ -64,8 +72,8 @@ tar_plan(
                recurse = TRUE),
     format = "file"
   ),
-
-  #### Protected area ----
+  
+  ## Protected area ----
   
   tar_target(
     capad2024_path,
@@ -74,22 +82,22 @@ tar_plan(
     format = "file"
   ),
   
+  tar_target(
+    legal_protection_path,
+    fs::path(datadir, "vector",
+             "raw/protected_area_sa_legal/legalprotection_merged.shp"),
+    format = "file"
+  ),
+
   #### RegContSum ----
   
-  ## AOI = state | species ----
+  ## AOI = state | species & subspecies ----
   tarchetypes::tar_file_read(
-    regcontSA_spmax,
+    regcontSA,
     fs::path(tars$envRegContSum$summary$store, "summary_ind.csv"),
-    summarise_max_regcont(file_path = !!.x, rank_filter = "species")
-  ),
-  
-  ## AOI = state | subspecies | EPBC ----  
-  tarchetypes::tar_file_read(
-    regcontSA_subspmax,
-    fs::path(tars$envRegContSum$summary$store, "summary_ind.csv"),
-    summarise_max_regcont(file_path = !!.x, rank_filter = "subspecies") |> 
-      dplyr::filter(!is.na(`EPBC rating`))
-  ),
+    summarise_max_regcont(file_path = !!.x) |> 
+      dplyr::inner_join(kingdom_lookup, by = c("Taxa" = "taxa"))
+  )
   
   ## AOI = development ----
 

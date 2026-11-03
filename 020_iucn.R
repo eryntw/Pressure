@@ -15,15 +15,14 @@ tar_source()
 
 # targets -------
 
-thresh_meta_classified <- tar_read(thresh_meta_classified, store = tars$setup$store)
-regcontSA_spmax <- tar_read(regcontSA_spmax, store = tars$setup$store)
+regcontSA <- tar_read(regcontSA, store = tars$setup$store)
 
 tar_plan(
   
   ## Get IUCN data for all modeled species -------
   targets::tar_target(name = iucn_data,
                       command = map_iucn_data(
-                        regcontSA_spmax, #|> dplyr::slice_sample(n = 50), ## test !!!!
+                        regcontSA, # |> dplyr::slice_sample(n = 50), ## test !!!!
                         query_fn = get_iucn_threat,
                         pause = 1,
                         max_retries = 5)

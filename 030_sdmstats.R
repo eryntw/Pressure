@@ -3,7 +3,7 @@ library(dplyr)
 library(tarchetypes)
 library(crew)
 
-use_cores <- 5 # Too many workers will crash edge calculation
+use_cores <- 7 # Too many workers will crash edge calculation
 tar_option_set(packages = yaml::read_yaml("settings/packages.yaml")$packages, 
                controller = crew::crew_controller_local(workers = use_cores))
 
@@ -16,6 +16,7 @@ tar_source()
 # targets -------
 thresh_meta <- tar_read(thresh_meta, store = tars$setup$store)
 capad2024_path <- tar_read(capad2024_path, store = tars$setup$store)
+legal_protection_path <- tar_read(legal_protection_path, store = tars$setup$store)
 
 # terra RAM safety -------
 total_terra_ram_prop <- 0.6  # across all cores. Don't go above 0.6!
@@ -27,14 +28,6 @@ tar_plan(
   tar_target(
     thresh_meta_test,
     thresh_meta_grouped |> dplyr::slice_sample(n = 10)
-  ),
-  
-  ## Protected area merge ----
-  
-  tar_target(
-    capad_merged_path,
-    "/mnt/envshare/data/vector/raw/dcceew/capad_2024/capad_merged.gpkg",
-    format = "file"
   ),
   
   tar_target(
@@ -56,15 +49,31 @@ tar_plan(
     }
   ),
   
-  ## SDM in protected area (branch) ----
+  ## SDM in capad (branch) ----
   
   tar_target(
-    sdm_calculation,
+    sdm_capad,
     {
       terra::terraOptions(memfrac = use_memfrac)
-      capad <- terra::vect(capad_merged_path)
+      capad <- terra::vect(capad2024_path)
       summarise_sdm(thresh_meta_grouped$path, 
-                    capad_merged = capad)
+                    vector = capad)
+    },
+    pattern = map(thresh_meta_grouped),
+    iteration = "list",
+    garbage_collection = TRUE
+  ),
+  
+  ## SDM in legal protection (branch) ----
+  
+  tar_target(
+    sdm_legalprotection,
+    {
+      terra::terraOptions(memfrac = use_memfrac)
+      legal_protection <- terra::vect(legal_protection_path)
+      summarise_sdm(thresh_meta_grouped$path, 
+                    vector = legal_protection,
+                    label = "protected")
     },
     pattern = map(thresh_meta_grouped),
     iteration = "list",
@@ -91,7 +100,9 @@ tar_plan(
   tar_target(
     sdm_summary,
     thresh_meta |> 
-      dplyr::inner_join(dplyr::bind_rows(sdm_calculation), 
+      dplyr::inner_join(dplyr::bind_rows(sdm_capad), 
+                        by = "path") |> 
+      dplyr::inner_join(dplyr::bind_rows(sdm_legalprotection), 
                         by = "path") |> 
       dplyr::inner_join(dplyr::bind_rows(edge_calculation),
                         by = c("search_term" = "species"))

@@ -13,35 +13,33 @@ parse_genus_species <- function(taxon) {
 }
 
 #' Read a region-contribution summary file and extract the top-contributing
-#' record per taxon, restricted to a chosen taxonomic rank
-
-summarise_max_regcont <- function(file_path, rank_filter = "Species") {
+#' record per taxon
+#'
+#' @param file_path Path to the region-contribution summary CSV.
+#' @return A tibble with one row per taxon (the record with the highest
+#'   `Max region contrib (%)`), plus Genus and Species columns.
+summarise_max_regcont <- function(file_path) {
   
   # Step 1: Read the raw summary file.
   raw <- readr::read_csv(file_path, show_col_types = FALSE)
   
-  # Step 2: Restrict to the requested rank(s) before any grouping,
-  # so slice_max() only competes within the taxa we actually want.
-  filtered <- raw |>
-    dplyr::filter(Rank == rank_filter)
-  
-  # Step 3: For each taxon, keep only its single highest-contribution record.
-  top_per_taxon <- filtered |>
+  # Step 2: For each taxon, keep only its single highest-contribution record.
+  top_per_taxon <- raw |>
     dplyr::group_by(Taxa) |>
     dplyr::slice_max(`Max region contrib (%)`, n = 1, with_ties = FALSE) |>
     dplyr::ungroup()
   
-  # Step 4: Parse Genus/Species from the first two words of Taxa.
+  # Step 3: Parse Genus/Species from the first two words of Taxa.
   parsed <- top_per_taxon$Taxa |>
     purrr::map_dfr(parse_genus_species) |>
     dplyr::select(Genus, Species)
   
-  # Step 5: Row-identity guard before bind_cols() — bind_cols() assumes row
+  # Step 4: Row-identity guard before bind_cols() — bind_cols() assumes row
   # alignment silently, so this converts a potential silent misalignment
   # into a loud failure if top_per_taxon and parsed ever diverge in row count.
   stopifnot(nrow(top_per_taxon) == nrow(parsed))
   
-  # Step 6: Bind the parsed columns back onto the summary data.
+  # Step 5: Bind the parsed columns back onto the summary data.
   top_per_taxon |>
     dplyr::bind_cols(parsed)
 }

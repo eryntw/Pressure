@@ -1,75 +1,55 @@
 ################################
 # current project
-Status:
+Pressure:
   extent:
-    extent_vector: aus_imcra_prov_dissolve
-    extent_filt_col: ~
-    extent_filt_level: ~
+    extent_vector: "aus_imcra_prov_dissolve"
+    extent_filt_col: NULL
+    extent_filt_level: NULL
     extent_buffer: 0
-    extent_time: P50Y
-    region_taxa: sa_br_dissolve
+    extent_time: "P50Y"
+    region_taxa: "sa_br_dissolve"
   grain:
-    res_x: 90
-    res_y: 90
-    grain_time: P1Y
-    taxonomic: species
-    
+    res_x: 30
+    res_y: 30
+    grain_time: "P1Y"
+    taxonomic: 
+      - species
+      - subspecies
+
 # other project
 
-RecExtract:
+envRegContSum:
   extent:
-    extent_vector: ~
-    extent_buffer: ~
-    extent_time: ~
-    region_taxa: ~
-  grain:
-    res_x: ~
-    res_y: ~
-    grain_time: ~
-    taxonomic: ~
-  store:
-    store: "_targets"
-
-envCleaned:
-  extent:
-    extent_time: P100Y # must be a period of years
-  grain:
-    res_x: 30
-    res_y: 30
-    
-envRange:
-  extent:
-    extent_vector: aus_imcra_prov_dissolve
-    
-envSDMs:
-  extent:
-    extent_vector: sa_br_dissolve
-    region_taxa: NULL
-    
-envEco:
-  grain:
-    res_x: 30
-    res_y: 30
+    extent_time: 
+      - P20Y
+      - P50Y
   aoi:
-    aoi_vector: sa_br_dissolve
+    aoi_vector: "sa_land_sea"
     aoi_filt_col: ""
     aoi_filt_level: ""
     aoi_buffer: 0
     
-envRegContSum:
-  extent:
-    extent_time: 
-    - P20Y
-    - P50Y
+RecExtract:
   grain:
-    res_x: 30
-    res_y: 30
-    grain_time: P1Y
-    taxonomic:
-    - species
-    - subspecies
+    taxonomic: "subspecies"
+
+
+envCleaned:
+  extent:
+    extent_time: "P100Y"
+    
+envSDMs:
+  extent:
+    extent_vector: "sa_br_dissolve"
+    region_taxa: NULL
+  grain:
+    res_x: 90
+    res_y: 90
+    taxonomic: "species"
+    
+envEco:
   aoi:
-    aoi_vector: sa_land_sea
-    aoi_filt_col: ~
-    aoi_filt_level: ~
+    aoi_vector: "sa_br_dissolve"
+    aoi_filt_col: ""
+    aoi_filt_level: ""
     aoi_buffer: 0

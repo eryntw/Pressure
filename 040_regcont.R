@@ -12,8 +12,7 @@ tars <- yaml::read_yaml("_targets.yaml")
 # tar source -------
 tar_source()
 
-regcontSA_spmax <- tar_read(regcontSA_spmax, store = tars$setup$store)
-regcontSA_subspmax <- tar_read(regcontSA_subspmax, store = tars$setup$store)
+regcontSA <- tar_read(regcontSA, store = tars$setup$store)
 sdm_summary <- tar_read(sdm_summary, store = tars$sdmstats$store)
 
 # targets -------
@@ -26,13 +25,13 @@ tar_plan(
   tar_target(
     sdm_reg_summary,
     command = {
-      regcontSA_spmax <-  regcontSA_spmax |> ## State RegCont
+      regcontSA <- regcontSA |> ## State RegCont
         dplyr::rename_with(.fn = janitor::make_clean_names) |>
         dplyr::rename_with(.fn = \(x) paste0("sa_", x))
       
       dplyr::left_join(
         sdm_summary,
-        regcontSA_spmax,
+        regcontSA,
         by = c("search_term" = "sa_taxa")
       )
     }

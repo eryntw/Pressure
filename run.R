@@ -9,7 +9,7 @@ envFunc::check_packages(yaml::read_yaml("settings/packages.yaml") |>
 )
 # tars --------
 ## local ------
-tars_local <- envTargets::make_tars(settings = envFunc::extract_scale("Status"),
+tars_local <- envTargets::make_tars(settings = envFunc::extract_scale("Pressure"),
                                     save_yaml = FALSE)
 
 ## Other projects ------
@@ -19,18 +19,18 @@ tars_cleaned <- envTargets::make_tars(settings = envFunc::extract_scale("envClea
 
 tars_rec <- envTargets::make_tars(settings = envFunc::extract_scale("RecExtract"),
                                   project_base = fs::path("..", "RecExtract"),
-                                  local = FALSE, 
-                                  list_names = "store")
+                                  local = FALSE)
 
 tars_sdm <- envTargets::make_tars(settings = envFunc::extract_scale("envSDMs"),
                                   project_base = fs::path("..", "envSDMs"),
                                   store_base = "/projects/projects_extra/out", # PROD
                                   local = FALSE)
 
-tars_regcontsum <- envTargets::make_tars(settings = envFunc::extract_scale("envRegContSum"),
-                                      project_base = fs::path("..", "envRegContSum"),
-                                      local = FALSE,
-                                      list_names = c("extent", "grain", "aoi"))
+tars_regcontsum <- envTargets::make_tars(
+  settings = envFunc::extract_scale("envRegContSum"),
+  project_base = fs::path("..", "envRegContSum"),
+  local = FALSE,
+  list_names = c("extent", "grain", "aoi"))
 
 tars <- c(tars_local, tars_cleaned, tars_rec, tars_sdm, tars_regcontsum)
 
