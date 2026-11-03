@@ -14,6 +14,7 @@ tar_source()
 
 regcontSA <- tar_read(regcontSA, store = tars$setup$store)
 sdm_summary <- tar_read(sdm_summary, store = tars$sdmstats$store)
+iucn_summary <- tar_read(iucn_summary, store = tars$iucn$store)
 
 # targets -------
 
@@ -23,17 +24,27 @@ tar_plan(
   
   ## RegCont bind to sdm_summary ----
   tar_target(
-    sdm_reg_summary,
+    regcont_summary,
     command = {
       regcontSA <- regcontSA |> ## State RegCont
         dplyr::rename_with(.fn = janitor::make_clean_names) |>
         dplyr::rename_with(.fn = \(x) paste0("sa_", x))
       
-      dplyr::left_join(
+      # bind other regcont
+    }
+  ),
+  
+  tar_target(
+    pressure,
+    command = {
+      splevel <- dplyr::left_join(
         sdm_summary,
-        regcontSA,
-        by = c("search_term" = "sa_taxa")
+        iucn_summary,
+        by = c("search_term" = "scientific_name")
       )
+        
+     regcont_summary |> 
+       dplyr::left_join(splevel, by = c("sa_taxa" = "search_term"))   
     }
   )
 )
